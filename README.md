@@ -34,4 +34,10 @@ This is a **Tic-Tac-Toe Game** application built using **Spring Boot**. The proj
 ```bash
 git clone https://github.com/your-username/tic-tac-toe-springboot.git
 cd tic-tac-toe-springboot
-![Screenshot 2024-11-29 004134](https://github.com/user-attachments/assets/eb039afe-6798-4691-8eec-ddc9383542d5)
+```
+#Draw!
+![Screenshot 2024-11-29 004134](https://github.com/user-attachments/assets/4e9b0b9c-1865-4609-90ef-fca56cb924cf)
+
+#wins
+![Screenshot 2024-11-29 004041](https://github.com/user-attachments/assets/514b9276-8695-4a36-bb6a-dd1deb04caf0)
+
