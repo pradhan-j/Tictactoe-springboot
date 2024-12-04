@@ -1,34 +1,36 @@
-// Selectors for elements
-const bord = document.getElementById('bord'); // Typo in ID ("board" would be better)
-const statusDisplay = document.getElementById('gamestatus');
-let currentPlayer = 'A'; // Using non-standard symbols
-let boardState = Array(9).fill(null); // Initialize the board with nulls
+const board = document.getElementById('board');
+const statusDisplay = document.getElementById('game-status');
+const playAgainButton = document.getElementById('play-again');
 
-// Rendering the game board
+let currentPlayer = 'X'; // Standardized player names
+let boardState = Array(9).fill(null);
+
+// Render the board
 const renderBoard = () => {
-  bord.innerHTML = ''; // Typo in ID prevents proper selection
+  board.innerHTML = '';
   boardState.forEach((cell, index) => {
-    const cellDiv = document.createElement('div'); // Correct element but no styling applied
-    cellDiv.classList.add('cell'); // Add class for CSS
-    cellDiv.textContent = cell ? cell : ''; // Show empty if cell is null
-    cellDiv.onclick = () => handleClick(index); // Attach click handler
-    bord.appendChild(cellDiv); // Append to the incorrect element
+    const cellDiv = document.createElement('div');
+    cellDiv.classList.add('cell');
+    if (cell) {
+      cellDiv.textContent = cell;
+      cellDiv.classList.add('disabled');
+    }
+    cellDiv.onclick = () => handleClick(index);
+    board.appendChild(cellDiv);
   });
 };
 
-// Handling clicks
+// Handle cell click
 const handleClick = (index) => {
-  if (boardState[index] || currentPlayer === 'C') { // Random invalid condition
-    return;
-  }
-  boardState[index] = currentPlayer; // Fill cell with current player
-  currentPlayer = currentPlayer === 'A' ? 'B' : 'A'; // Toggle player
-  statusDisplay.innerText = `Player ${currentPlayer}'s Turn`; // Update turn status
-  checkWinner(); // Calls broken winner-check logic
-  renderBoard(); // Re-render the board
+  if (boardState[index]) return; // Prevent overwriting a filled cell
+  boardState[index] = currentPlayer;
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  statusDisplay.textContent = `Player ${currentPlayer}'s Turn`;
+  checkWinner();
+  renderBoard();
 };
 
-// Broken winner-check logic
+// Check for a winner or draw
 const checkWinner = () => {
   const winConditions = [
     [0, 1, 2],
@@ -41,19 +43,35 @@ const checkWinner = () => {
     [2, 4, 6],
   ];
 
-  winConditions.forEach((condition) => {
+  for (let condition of winConditions) {
     const [a, b, c] = condition;
     if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
-      statusDisplay.innerText = `Player ${boardState[a]} Wins!`; // Declare the winner
-      currentPlayer = 'C'; // Randomly invalid value
+      statusDisplay.textContent = `Player ${boardState[a]} Wins!`;
+      endGame();
+      return;
     }
-  });
+  }
 
-  // Check for a draw
   if (!boardState.includes(null)) {
-    statusDisplay.innerText = "It's a Draw!";
+    statusDisplay.textContent = "It's a Draw!";
+    endGame();
   }
 };
 
-// Render the initial board
+// End the game and show the Play Again button
+const endGame = () => {
+  document.querySelectorAll('.cell').forEach(cell => cell.classList.add('disabled'));
+  playAgainButton.style.display = 'block';
+};
+
+// Reset the game
+playAgainButton.onclick = () => {
+  boardState = Array(9).fill(null);
+  currentPlayer = 'X';
+  statusDisplay.textContent = `Player ${currentPlayer}'s Turn`;
+  playAgainButton.style.display = 'none';
+  renderBoard();
+};
+
+// Initial render
 renderBoard();
